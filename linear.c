@@ -37,6 +37,8 @@ int main()
         list[i] = str[i];
     }
 
+    /* list[n] is actually a pointer to a memory location */
+
     // Accessing the block
     // Print the elements of the array
     printf("The elements of the array are: ");
