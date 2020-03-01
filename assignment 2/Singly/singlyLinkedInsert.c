@@ -14,9 +14,80 @@ struct Node *create()
     return (struct Node *)malloc(sizeof(struct Node));
 }
 
-/* Given a reference (pointer to pointer) to the head of a list and an int,  inserts a new node on the front of the list. */
-void add(struct Node **reference, int new_data)
+// Give every node an int value
+// (current_node, current_iteration, whether_circular, head_node)
+void getValue(struct Node **ref, int i, struct Node **head)
 {
+
+    // Pointer the actual head node
+    struct Node *pointer = *ref;
+
+    // Input data into node
+    printf("\nEnter data for node %d: ", i);
+    scanf("%d", &pointer->data);
+
+    // End list
+    pointer->next = NULL;
+}
+
+// ... create nodes dynamically
+struct Node *dynamicNodes()
+{
+    struct Node *a_head = NULL;
+    struct Node *a_tail = NULL;
+
+    int size, i;
+
+    printf("Enter size of list : ");
+    scanf("%d", &size);
+
+    for (i = 0; i < size; i++)
+    {
+        // Create first node
+        if (i == 0)
+        {
+            a_head = a_tail = create();
+            getValue(&a_tail, i, &a_head);
+        }
+        else
+        {
+            a_tail->next = create();             // adding new node to the end of non-empty list
+            getValue(&a_tail->next, i, &a_head); // Insert data into the new node
+            a_tail = a_tail->next;               // Update tail pointer (Move the tail one step)
+        }
+    }
+
+    // Return the head of the list
+    return a_head;
+}
+
+// Traverse the list
+void traverse(struct Node **ref)
+{
+    struct Node *pointer = *ref;
+    while (pointer != NULL)
+    {
+        if (pointer->next != NULL)
+        {
+            printf("\n%d", pointer->data);
+            pointer = pointer->next;
+        }
+        else
+        {
+            printf("\n%d\n", pointer->data);
+            return;
+        }
+    }
+}
+
+// By reference we mean head
+/* Given a reference (pointer to pointer) to the head of a list and an int,  inserts a new node on the front of the list. */
+void add(struct Node **reference)
+{
+    int new_data;
+    printf("\nPlease enter Integer to insert at begining: ");
+    scanf("%d", &new_data);
+
     /* 1. allocate node */
     struct Node *new_node = create();
 
@@ -30,9 +101,15 @@ void add(struct Node **reference, int new_data)
     (*reference) = new_node;
 }
 
-// Insert after a certain node
-void addAfter(struct Node **prev_node, int new_data)
+// Insert after the first node
+// Can be apllied for all other nodes
+void addAfter(struct Node **prev_node)
 {
+
+    int new_data;
+    printf("\nPlease enter Integer to insert in: ");
+    scanf("%d", &new_data);
+
     /*1. check if the given prev_node is NULL */
     if (prev_node == NULL)
     {
@@ -53,8 +130,13 @@ void addAfter(struct Node **prev_node, int new_data)
     (*prev_node)->next = new_node;
 }
 
-void append(struct Node **reference, int new_data)
+void append(struct Node **reference)
 {
+
+    int new_data;
+    printf("\nPlease enter Integer to append: ");
+    scanf("%d", &new_data);
+
     /* 1. allocate node */
     struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
 
@@ -83,67 +165,30 @@ void append(struct Node **reference, int new_data)
     return;
 }
 
-// function to traverse list
-void traverse(struct Node **reference)
-{
-    struct Node *pointer = *reference;
-
-    while (1 == 1)
-    {
-        // While not at end of node
-        if (pointer->next != NULL)
-        {
-            printf("%d \n", pointer->data);
-            pointer = pointer->next;
-        }
-        // While at end of node
-        else
-        {
-            printf("%d \n", pointer->data);
-            return;
-        }
-    }
-}
 
 // Program to create a simple linked
 // list with 3 nodes
 int main()
 {
+    // Create dynamic list and return the head of the node
+    struct Node *dynamicList = dynamicNodes();
 
-    // Create three nodes
-    // ... first is the HEAD
-    struct Node *first = create();
-    struct Node *second = create();
-    struct Node *third = create();
+    traverse(&dynamicList);
 
-    /*Data is random because we haven’t assigned  
-    anything yet  */
+    // Add at front
+    add(&dynamicList);
 
-    first->data = 1;      // assign data in first node
-    first->next = second; // Link first node with the second node
+    traverse(&dynamicList);
 
-    second->data = 2;     // assign data to second node
-    second->next = third; // Link second node with the third node
+    // Insert
+    addAfter(&dynamicList);
 
-    third->data = 3;    // assign data to third node
-    third->next = NULL; // Complete list
+    traverse(&dynamicList);
 
-    printf("Before First Insertion: \n");
-    // Pass in a pointer to the head (pointer to pointer)
-    traverse(&first);
+    // Append
+    append(&dynamicList);
 
-    printf("\nAfter First insertion: \n");
-    // Pass pointer to list and integer to be inserted
-    add(&first, 1000);
-    traverse(&first);
-
-    printf("\nInsertion after: \n");
-    addAfter(&first, 45678);
-    traverse(&first);
-
-    printf("\nInsertion Last: \n");
-    append(&first, 6567);
-    traverse(&first);
+    traverse(&dynamicList);
 
     return 0;
 }
