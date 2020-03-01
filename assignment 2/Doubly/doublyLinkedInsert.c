@@ -15,6 +15,58 @@ struct Node *create()
     return (struct Node *)malloc(sizeof(struct Node));
 }
 
+// Give every node an int value
+// (current_node, current_iteration, whether_circular, head_node)
+void getValue(struct Node **ref, int i)
+{
+
+    // Pointer the actual tail
+    struct Node *pointer = *ref;
+
+    // Input data into node
+    printf("\nEnter data for node %d: ", i);
+    scanf("%d", &pointer->data);
+
+    // End list
+    pointer->next = NULL;
+}
+
+// ... create nodes dynamically
+struct Node *dynamicNodes()
+{
+    struct Node *a_head = NULL;
+    struct Node *a_tail = NULL;
+
+    int size, i;
+
+    printf("Enter size of list : ");
+    scanf("%d", &size);
+
+    for (i = 0; i < size; i++)
+    {
+        // Create first node
+        if (i == 0)
+        {
+            // Create node
+            a_head = a_tail = create();
+            // Get value from user
+            getValue(&a_tail, i);
+            // Set p->ll (Left link) to NULL
+            a_head->prev = NULL;
+        }
+        else
+        {
+            a_tail->next = create();     // adding new node to the end of non-empty list
+            a_tail->next->prev = a_tail; // Update Left link for the node we've just created
+            getValue(&a_tail->next, i);  // Insert data into the new node
+            a_tail = a_tail->next;       // Update tail pointer (Move the tail one step)
+        }
+    }
+
+    // Return the head of the list
+    return a_head;
+}
+
 struct Node *traverse(struct Node **reference)
 {
 
@@ -38,8 +90,13 @@ struct Node *traverse(struct Node **reference)
 
 /* Given a reference (pointer to pointer) to the head of a list 
    and an int, inserts a new node on the front of the list. */
-void insert(struct Node **reference, int data_to_insert)
+void add(struct Node **reference)
 {
+
+    int data_to_insert;
+    printf("\nPlease enter Integer to insert at begining: ");
+    scanf("%d", &data_to_insert);
+
     /* 1. allocate node */
     struct Node *new_node = create();
 
@@ -59,8 +116,13 @@ void insert(struct Node **reference, int data_to_insert)
 }
 
 /* Given a node as prev_node, insert a new node after the given node */
-void insertAfter(struct Node **reference, int data_to_insert)
+void addAfter(struct Node **reference)
 {
+
+    int data_to_insert;
+    printf("\nPlease enter Integer to insert after: ");
+    scanf("%d", &data_to_insert);
+
     /*1. check if the given prev_node is NULL */
     if (reference == NULL)
     {
@@ -88,8 +150,13 @@ void insertAfter(struct Node **reference, int data_to_insert)
         new_node->next->prev = new_node;
 }
 
-void append(struct Node **reference, int data_to_insert)
+void append(struct Node **reference)
 {
+
+    int data_to_insert;
+    printf("\nPlease enter Integer to append: ");
+    scanf("%d", &data_to_insert);
+
     /* 1. allocate node */
     struct Node *new_node = create();
 
@@ -127,39 +194,25 @@ void append(struct Node **reference, int data_to_insert)
 int main()
 {
 
-    // Create three nodes
-    struct Node *first = create();
-    struct Node *second = create();
-    struct Node *third = create();
+    // Create dynamic list and return the head of the node
+    struct Node *dynamicList = dynamicNodes();
 
-    /*Data is random because we haven’t assigned  
-    anything yet  */
+    traverse(&dynamicList);
 
-    first->data = 1;      // assign data in first node
-    first->next = second; // Link first node with the second node
-    first->prev = NULL;   // Link node to previous
+    // Add at front
+    add(&dynamicList);
 
-    second->data = 2;     // assign data to second node
-    second->next = third; // Link second node with the third node
-    second->prev = first; // Link to previous
+    traverse(&dynamicList);
 
-    third->data = 3;      // assign data to third node
-    third->next = NULL;   // Complete list
-    third->prev = second; // Link to previous
+    // Insert
+    addAfter(&dynamicList);
 
-    // traverse(&first);
-
-    // Insert at begining then traverse
-    // insert(&first, 56);
-    // traverse(&first);
-
-    // Insert after
-    // insertAfter(&second, 6);
-    // traverse(&first);
+    traverse(&dynamicList);
 
     // Append
-    append(&second, 789);
-    traverse(&first);
+    append(&dynamicList);
+
+    traverse(&dynamicList);
 
     return 0;
 }

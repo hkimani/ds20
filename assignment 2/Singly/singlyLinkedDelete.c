@@ -17,7 +17,7 @@ struct Node *create()
 
 // Give every node an int value
 // (current_node, current_iteration, whether_circular, head_node)
-void getValue(struct Node **ref, int i, struct Node **head)
+void getValue(struct Node **ref, int i)
 {
 
     // Pointer the actual head node
@@ -48,13 +48,13 @@ struct Node *dynamicNodes()
         if (i == 0)
         {
             a_head = a_tail = create();
-            getValue(&a_tail, i, &a_head);
+            getValue(&a_tail, i);
         }
         else
         {
-            a_tail->next = create();             // adding new node to the end of non-empty list
-            getValue(&a_tail->next, i, &a_head); // Insert data into the new node
-            a_tail = a_tail->next;               // Update tail pointer (Move the tail one step)
+            a_tail->next = create();    // adding new node to the end of non-empty list
+            getValue(&a_tail->next, i); // Insert data into the new node
+            a_tail = a_tail->next;      // Update tail pointer (Move the tail one step)
         }
     }
 
@@ -115,6 +115,10 @@ void searchDelete(struct Node **reference)
         pointer = pointer->next;
         counter += 1;
     }
+
+    printf("\nSearch term not found\n");
+
+    return;
 }
 
 // Program to create a simple linked

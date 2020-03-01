@@ -15,6 +15,58 @@ struct Node *create()
     return (struct Node *)malloc(sizeof(struct Node));
 }
 
+// Give every node an int value
+// (current_node, current_iteration, whether_circular, head_node)
+void getValue(struct Node **ref, int i)
+{
+
+    // Pointer the actual tail
+    struct Node *pointer = *ref;
+
+    // Input data into node
+    printf("\nEnter data for node %d: ", i);
+    scanf("%d", &pointer->data);
+
+    // End list
+    pointer->next = NULL;
+}
+
+// ... create nodes dynamically
+struct Node *dynamicNodes()
+{
+    struct Node *a_head = NULL;
+    struct Node *a_tail = NULL;
+
+    int size, i;
+
+    printf("Enter size of list : ");
+    scanf("%d", &size);
+
+    for (i = 0; i < size; i++)
+    {
+        // Create first node
+        if (i == 0)
+        {
+            // Create node
+            a_head = a_tail = create();
+            // Get value from user
+            getValue(&a_tail, i);
+            // Set p->ll (Left link) to NULL
+            a_head->prev = NULL;
+        }
+        else
+        {
+            a_tail->next = create();             // adding new node to the end of non-empty list
+            a_tail->next->prev = a_tail;         // Update Left link for the node we've just created
+            getValue(&a_tail->next, i);          // Insert data into the new node
+            a_tail = a_tail->next;               // Update tail pointer (Move the tail one step)
+        }
+    }
+
+    // Return the head of the list
+    return a_head;
+}
+
 struct Node *traverse(struct Node **reference)
 {
 
@@ -39,27 +91,10 @@ struct Node *traverse(struct Node **reference)
 int main()
 {
 
-    // Create three nodes
-    struct Node *first = create();
-    struct Node *second = create();
-    struct Node *third = create();
+    // Create dynamic list and return the head of the node
+    struct Node *dynamicList = dynamicNodes();
 
-    /*Data is random because we haven’t assigned  
-    anything yet  */
-
-    first->data = 1;      // assign data in first node
-    first->next = second; // Link first node with the second node
-    first->prev = NULL;   // Link node to previous
-
-    second->data = 2;     // assign data to second node
-    second->next = third; // Link second node with the third node
-    second->prev = first; // Link to previous
-
-    third->data = 3;      // assign data to third node
-    third->next = NULL;   // Complete list
-    third->prev = second; // Link to previous
-
-    traverse(&first);
+    traverse(&dynamicList);
 
     return 0;
 }
